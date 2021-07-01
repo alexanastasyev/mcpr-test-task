@@ -2,6 +2,7 @@ package org.example.mcprwebapp.address;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -9,18 +10,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+@RequestMapping("rest/address")
 public class AddressController {
-    @GetMapping("/rest/address/all")
+    @GetMapping("/all")
     @ResponseBody
     public List<Address> showAllAddresses() {
         Address mockAddress = new Address("2", "Velikanova", "Ryazan", "Ryazan State",
                 "390044", "Russia");
-        List<Address> mockAddresList = new ArrayList<>();
-        mockAddresList.add(mockAddress);
-        return mockAddresList;
+        List<Address> mockAddressList = new ArrayList<>();
+        mockAddressList.add(mockAddress);
+        return mockAddressList;
     }
 
-    @GetMapping("rest/address")
+    @GetMapping("")
     @ResponseBody
     public Address showAddressById(
             @RequestParam(name = "id", required = true) String id
@@ -30,7 +32,7 @@ public class AddressController {
         return mockAddress;
     }
 
-    @GetMapping("rest/address/delete")
+    @GetMapping("/delete")
     @ResponseBody
     public String deleteAddressById(
             @RequestParam(name = "id", required = true) String id
@@ -38,7 +40,7 @@ public class AddressController {
         return "success";
     }
 
-    @GetMapping("rest/address/update")
+    @GetMapping("/update")
     @ResponseBody
     public String updateAddressById(
             @RequestParam(name = "id", required = true) String id,

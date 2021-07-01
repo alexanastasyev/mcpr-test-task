@@ -3,6 +3,7 @@ package org.example.mcprwebapp.person;
 import org.example.mcprwebapp.address.Address;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -10,8 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+@RequestMapping("rest/person")
 public class PersonController {
-    @GetMapping("/rest/person/all")
+    @GetMapping("/all")
     @ResponseBody
     public List<Person> showAllPersons() {
         Address mockAddress = new Address("2", "Velikanova", "Ryazan",
@@ -22,7 +24,7 @@ public class PersonController {
         return mockPersonList;
     }
 
-    @GetMapping("rest/person")
+    @GetMapping("")
     @ResponseBody
     public Person showPersonById(
         @RequestParam(name = "id", required = true) String id
@@ -33,7 +35,7 @@ public class PersonController {
         return mockPerson;
     }
 
-    @GetMapping("rest/person/delete")
+    @GetMapping("/delete")
     @ResponseBody
     public String deletePersonById(
         @RequestParam(name = "id", required = true) String id
@@ -41,7 +43,7 @@ public class PersonController {
         return "success";
     }
 
-    @GetMapping("rest/person/update")
+    @GetMapping("/update")
     @ResponseBody
     public String updatePersonById(
         @RequestParam(name = "id", required = true) String id,
