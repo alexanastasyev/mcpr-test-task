@@ -1,21 +1,26 @@
 package org.example.mcprwebapp.address;
 
-import org.springframework.context.annotation.Primary;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Address {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column
     private String id;
+
+    @Column
     private String street;
+
+    @Column
     private String city;
+
+    @Column
     private String state;
+
+    @Column
     private String postalCode;
+
+    @Column
     private String country;
 
     public Address(String id, String street, String city, String state, String postalCode, String country) {

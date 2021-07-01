@@ -7,26 +7,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 @RequestMapping("rest/address")
 public class AddressController {
-    @Autowired
-    private AddressRepository addressRepository;
+    private final AddressRepository addressRepository;
+
+    public AddressController(@Autowired AddressRepository addressRepository) {
+        this.addressRepository = addressRepository;
+    }
 
     @GetMapping("/all")
     @ResponseBody
     public List<Address> showAllAddresses() {
         Iterable<Address> addresses = addressRepository.findAll();
         return (List<Address>) addresses;
-
-//        Address mockAddress = new Address("2", "Velikanova", "Ryazan", "Ryazan State",
-//                "390044", "Russia");
-//        List<Address> mockAddressList = new ArrayList<>();
-//        mockAddressList.add(mockAddress);
-//        return mockAddressList;
     }
 
     @GetMapping("")
@@ -34,9 +30,7 @@ public class AddressController {
     public Address showAddressById(
             @RequestParam(name = "id", required = true) String id
     ) {
-        Address mockAddress = new Address(id, "Velikanova", "Ryazan", "Ryazan State",
-                "390044", "Russia");
-        return mockAddress;
+        return addressRepository.getById(id);
     }
 
     @GetMapping("/delete")
@@ -44,6 +38,8 @@ public class AddressController {
     public String deleteAddressById(
             @RequestParam(name = "id", required = true) String id
     ) {
+        // TODO: doesn't work
+        addressRepository.deleteById(id);
         return "success";
     }
 
@@ -57,6 +53,8 @@ public class AddressController {
             @RequestParam(name = "postal_code", required = false) String newPostalCode,
             @RequestParam(name = "country", required = false) String newCountry
     ) {
+        Address address = addressRepository.getById(id);
+        // TODO: complete it
         return "success";
     }
 }
