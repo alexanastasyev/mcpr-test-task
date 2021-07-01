@@ -1,5 +1,6 @@
 package org.example.mcprwebapp.address;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,14 +13,20 @@ import java.util.List;
 @Controller
 @RequestMapping("rest/address")
 public class AddressController {
+    @Autowired
+    private AddressRepository addressRepository;
+
     @GetMapping("/all")
     @ResponseBody
     public List<Address> showAllAddresses() {
-        Address mockAddress = new Address("2", "Velikanova", "Ryazan", "Ryazan State",
-                "390044", "Russia");
-        List<Address> mockAddressList = new ArrayList<>();
-        mockAddressList.add(mockAddress);
-        return mockAddressList;
+        Iterable<Address> addresses = addressRepository.findAll();
+        return (List<Address>) addresses;
+
+//        Address mockAddress = new Address("2", "Velikanova", "Ryazan", "Ryazan State",
+//                "390044", "Russia");
+//        List<Address> mockAddressList = new ArrayList<>();
+//        mockAddressList.add(mockAddress);
+//        return mockAddressList;
     }
 
     @GetMapping("")
