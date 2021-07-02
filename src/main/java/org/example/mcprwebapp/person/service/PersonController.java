@@ -53,7 +53,7 @@ public class PersonController {
     @GetMapping("/delete")
     @ResponseBody
     public String deletePersonById(@RequestParam(name = "id") String id) {
-        personRepository.deleteById(id); // TODO: handle exception
+        personRepository.deleteById(id);
         return "success";
     }
 
@@ -82,7 +82,7 @@ public class PersonController {
         if (newAddressId == null) {
             newAddressId = personEntity.getAddressId();
         }
-        personRepository.updateById(id, newName, newPhone, newEmail, newAddressId); // TODO: handle exception
+        personRepository.updateById(id, newName, newPhone, newEmail, newAddressId);
         return "success";
     }
 }

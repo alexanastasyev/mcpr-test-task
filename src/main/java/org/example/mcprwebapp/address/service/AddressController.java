@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.OnError;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +51,7 @@ public class AddressController {
     @GetMapping("/delete")
     @ResponseBody
     public String deleteAddressById(@RequestParam(name = "id") String id) {
-        addressRepository.deleteById(id); // TODO: handle exception
+        addressRepository.deleteById(id);
         return "success";
     }
 
@@ -83,7 +84,7 @@ public class AddressController {
         if (newCountry == null) {
             newCountry = addressEntity.getCountry();
         }
-        addressRepository.updateById(id, newStreet, newCity, newState, newPostalCode, newCountry); // TODO: handle exception
+        addressRepository.updateById(id, newStreet, newCity, newState, newPostalCode, newCountry);
         return "success";
     }
 }
