@@ -21,8 +21,8 @@ public class AddressController {
     @GetMapping("/all")
     @ResponseBody
     public List<Address> showAllAddresses() {
-        Iterable<Address> addresses = addressRepository.findAll();
-        return (List<Address>) addresses;
+        List<Address> addresses = addressRepository.getAll();
+        return addresses;
     }
 
     @GetMapping("")
@@ -38,7 +38,6 @@ public class AddressController {
     public String deleteAddressById(
             @RequestParam(name = "id", required = true) String id
     ) {
-        // TODO: doesn't work
         addressRepository.deleteById(id);
         return "success";
     }
@@ -54,7 +53,22 @@ public class AddressController {
             @RequestParam(name = "country", required = false) String newCountry
     ) {
         Address address = addressRepository.getById(id);
-        // TODO: complete it
+        if (newStreet == null) {
+            newStreet = address.getStreet();
+        }
+        if (newCity == null) {
+            newCity = address.getCity();
+        }
+        if (newState == null) {
+            newState = address.getState();
+        }
+        if (newPostalCode == null) {
+            newPostalCode = address.getPostalCode();
+        }
+        if (newCountry == null) {
+            newCountry = address.getCountry();
+        }
+        addressRepository.updateById(id, newStreet, newCity, newState, newPostalCode, newCountry);
         return "success";
     }
 }
