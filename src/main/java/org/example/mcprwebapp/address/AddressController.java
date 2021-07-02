@@ -31,7 +31,6 @@ public class AddressController {
     }
 
     @GetMapping("/delete")
-    @ExceptionHandler(ConstraintViolationException.class)
     @ResponseBody
     public String deleteAddressById(
             @RequestParam(name = "id") String id
