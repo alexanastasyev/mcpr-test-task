@@ -1,13 +1,17 @@
-package org.example.mcprwebapp.address;
+package org.example.mcprwebapp.address.service;
 
-import org.hibernate.exception.ConstraintViolationException;
+import org.example.mcprwebapp.address.Address;
+import org.example.mcprwebapp.address.database.AddressConverter;
+import org.example.mcprwebapp.address.database.AddressEntity;
+import org.example.mcprwebapp.address.database.AddressRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
-@Controller
+@Service
 @RequestMapping("rest/address")
 public class AddressController {
     private final AddressRepository addressRepository;
@@ -19,7 +23,12 @@ public class AddressController {
     @GetMapping("/all")
     @ResponseBody
     public List<Address> showAllAddresses() {
-        return addressRepository.getAll();
+        List<AddressEntity> addressEntities = addressRepository.getAll();
+        List<Address> addresses = new ArrayList<>();
+        for (AddressEntity addressEntity : addressEntities) {
+            addresses.add(AddressConverter.convertEntityToAddress(addressEntity));
+        }
+        return addresses;
     }
 
     @GetMapping("/find")
@@ -27,7 +36,8 @@ public class AddressController {
     public Address showAddressById(
             @RequestParam(name = "id") String id
     ) {
-        return addressRepository.getById(id);
+        AddressEntity addressEntity = addressRepository.getById(id);
+        return AddressConverter.convertEntityToAddress(addressEntity);
     }
 
     @GetMapping("/delete")
@@ -49,21 +59,21 @@ public class AddressController {
             @RequestParam(name = "postal_code", required = false) String newPostalCode,
             @RequestParam(name = "country", required = false) String newCountry
     ) {
-        Address address = addressRepository.getById(id);
+        AddressEntity addressEntity = addressRepository.getById(id);
         if (newStreet == null) {
-            newStreet = address.getStreet();
+            newStreet = addressEntity.getStreet();
         }
         if (newCity == null) {
-            newCity = address.getCity();
+            newCity = addressEntity.getCity();
         }
         if (newState == null) {
-            newState = address.getState();
+            newState = addressEntity.getState();
         }
         if (newPostalCode == null) {
-            newPostalCode = address.getPostalCode();
+            newPostalCode = addressEntity.getPostalCode();
         }
         if (newCountry == null) {
-            newCountry = address.getCountry();
+            newCountry = addressEntity.getCountry();
         }
         addressRepository.updateById(id, newStreet, newCity, newState, newPostalCode, newCountry);
         return "success";

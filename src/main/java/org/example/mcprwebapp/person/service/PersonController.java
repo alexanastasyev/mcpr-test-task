@@ -1,6 +1,7 @@
-package org.example.mcprwebapp.person;
+package org.example.mcprwebapp.person.service;
 
 import org.example.mcprwebapp.address.Address;
+import org.example.mcprwebapp.person.Person;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

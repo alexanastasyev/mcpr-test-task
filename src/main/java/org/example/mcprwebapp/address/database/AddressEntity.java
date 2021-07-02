@@ -1,20 +1,39 @@
-package org.example.mcprwebapp.address;
+package org.example.mcprwebapp.address.database;
 
-public class Address {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity(name = "address")
+public class AddressEntity {
+    @Id
     private String id;
+
+    @Column
     private String street;
+
+    @Column
     private String city;
+
+    @Column
     private String state;
+
+    @Column
     private String postalCode;
+
+    @Column
     private String country;
 
-    public Address(String id, String street, String city, String state, String postalCode, String country) {
+    public AddressEntity(String id, String street, String city, String state, String postalCode, String country) {
         this.id = id;
         this.street = street;
         this.city = city;
         this.state = state;
         this.postalCode = postalCode;
         this.country = country;
+    }
+
+    public AddressEntity() {
     }
 
     public String getId() {

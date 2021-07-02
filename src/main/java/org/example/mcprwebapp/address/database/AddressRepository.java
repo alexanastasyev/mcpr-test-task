@@ -1,4 +1,4 @@
-package org.example.mcprwebapp.address;
+package org.example.mcprwebapp.address.database;
 
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -8,21 +8,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-public interface AddressRepository extends CrudRepository<Address, Long> {
-    @Query("SELECT a FROM Address a ORDER BY a.id")
-    List<Address> getAll();
+public interface AddressRepository extends CrudRepository<AddressEntity, String> {
+    @Query("SELECT a FROM address a ORDER BY a.id")
+    List<AddressEntity> getAll();
 
-    @Query("SELECT a FROM Address a WHERE a.id = :id")
-    Address getById(@Param("id") String id);
+    @Query("SELECT a FROM address a WHERE a.id = :id")
+    AddressEntity getById(@Param("id") String id);
 
     @Transactional
     @Modifying
-    @Query("DELETE FROM Address WHERE id = :id")
+    @Query("DELETE FROM address a WHERE a.id = :id")
     void deleteById(@Param("id") String id);
 
     @Transactional
     @Modifying
-    @Query("UPDATE Address a SET a.street = :street, a.city = :city, a.state = :state, a.postalCode = :postalCode, " +
+    @Query("UPDATE address a SET a.street = :street, a.city = :city, a.state = :state, a.postalCode = :postalCode, " +
             "a.country = :country WHERE a.id = :id")
     void updateById(
         @Param("id") String id,
