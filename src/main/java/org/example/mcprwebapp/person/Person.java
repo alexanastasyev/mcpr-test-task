@@ -4,6 +4,8 @@ import org.example.mcprwebapp.address.Address;
 
 @SuppressWarnings("unused")
 public class Person {
+    public static final Person NULL_PERSON = new Person("", "", "", "", Address.NULL_ADDRESS);
+
     private String id;
     private String name;
     private String phone;

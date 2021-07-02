@@ -43,13 +43,17 @@ public class PersonController {
     @ResponseBody
     public Person showPersonById(@RequestParam(name = "id") String id) {
         PersonEntity personEntity = personRepository.getById(id);
-        return personConverter.convertEntityToPerson(personEntity);
+        if (personEntity != null) {
+            return personConverter.convertEntityToPerson(personEntity);
+        } else {
+            return Person.NULL_PERSON;
+        }
     }
 
     @GetMapping("/delete")
     @ResponseBody
     public String deletePersonById(@RequestParam(name = "id") String id) {
-        personRepository.deleteById(id);
+        personRepository.deleteById(id); // TODO: handle exception
         return "success";
     }
 
@@ -63,6 +67,9 @@ public class PersonController {
         @RequestParam(name = "addressId", required = false) String newAddressId
     ) {
         PersonEntity personEntity = personRepository.getById(id);
+        if (personEntity == null) {
+            return "Error: person with id \"" + id + "\" doesn't exist";
+        }
         if (newName == null) {
             newName = personEntity.getName();
         }
@@ -75,7 +82,7 @@ public class PersonController {
         if (newAddressId == null) {
             newAddressId = personEntity.getAddressId();
         }
-        personRepository.updateById(id, newName, newPhone, newEmail, newAddressId);
+        personRepository.updateById(id, newName, newPhone, newEmail, newAddressId); // TODO: handle exception
         return "success";
     }
 }

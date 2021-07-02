@@ -40,13 +40,17 @@ public class AddressController {
     @ResponseBody
     public Address showAddressById(@RequestParam(name = "id") String id) {
         AddressEntity addressEntity = addressRepository.getById(id);
-        return addressConverter.convertEntityToAddress(addressEntity);
+        if (addressEntity != null) {
+            return addressConverter.convertEntityToAddress(addressEntity);
+        } else {
+            return Address.NULL_ADDRESS;
+        }
     }
 
     @GetMapping("/delete")
     @ResponseBody
     public String deleteAddressById(@RequestParam(name = "id") String id) {
-        addressRepository.deleteById(id);
+        addressRepository.deleteById(id); // TODO: handle exception
         return "success";
     }
 
@@ -61,6 +65,9 @@ public class AddressController {
         @RequestParam(name = "country", required = false) String newCountry
     ) {
         AddressEntity addressEntity = addressRepository.getById(id);
+        if (addressEntity == null) {
+            return "Error: address with id \"" + id + "\" doesn't exist";
+        }
         if (newStreet == null) {
             newStreet = addressEntity.getStreet();
         }
@@ -76,7 +83,7 @@ public class AddressController {
         if (newCountry == null) {
             newCountry = addressEntity.getCountry();
         }
-        addressRepository.updateById(id, newStreet, newCity, newState, newPostalCode, newCountry);
+        addressRepository.updateById(id, newStreet, newCity, newState, newPostalCode, newCountry); // TODO: handle exception
         return "success";
     }
 }
