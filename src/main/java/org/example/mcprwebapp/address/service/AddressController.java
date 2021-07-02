@@ -15,9 +15,11 @@ import java.util.List;
 @RequestMapping("rest/address")
 public class AddressController {
     private final AddressRepository addressRepository;
+    private final AddressConverter addressConverter;
 
-    public AddressController(@Autowired AddressRepository addressRepository) {
+    public AddressController(@Autowired AddressRepository addressRepository, @Autowired AddressConverter addressConverter) {
         this.addressRepository = addressRepository;
+        this.addressConverter = addressConverter;
     }
 
     @GetMapping("/all")
@@ -26,7 +28,7 @@ public class AddressController {
         List<AddressEntity> addressEntities = addressRepository.getAll();
         List<Address> addresses = new ArrayList<>();
         for (AddressEntity addressEntity : addressEntities) {
-            addresses.add(AddressConverter.convertEntityToAddress(addressEntity));
+            addresses.add(addressConverter.convertEntityToAddress(addressEntity));
         }
         return addresses;
     }
@@ -37,7 +39,7 @@ public class AddressController {
             @RequestParam(name = "id") String id
     ) {
         AddressEntity addressEntity = addressRepository.getById(id);
-        return AddressConverter.convertEntityToAddress(addressEntity);
+        return addressConverter.convertEntityToAddress(addressEntity);
     }
 
     @GetMapping("/delete")

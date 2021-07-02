@@ -1,8 +1,11 @@
 package org.example.mcprwebapp.person.service;
 
-import org.example.mcprwebapp.address.Address;
 import org.example.mcprwebapp.person.Person;
-import org.springframework.stereotype.Controller;
+import org.example.mcprwebapp.person.database.PersonConverter;
+import org.example.mcprwebapp.person.database.PersonEntity;
+import org.example.mcprwebapp.person.database.PersonRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -11,48 +14,69 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.ArrayList;
 import java.util.List;
 
-@Controller
+@Service
 @RequestMapping("rest/person")
 public class PersonController {
+    private final PersonRepository personRepository;
+    private final PersonConverter personConverter;
+
+    public PersonController(@Autowired PersonRepository personRepository, @Autowired PersonConverter personConverter) {
+        this.personRepository = personRepository;
+        this.personConverter = personConverter;
+    }
+
     @GetMapping("/all")
     @ResponseBody
     public List<Person> showAllPersons() {
-        Address mockAddress = new Address("2", "Velikanova", "Ryazan",
-                "Ryazan State", "390044", "Russia");
-        Person mockPerson = new Person("1", "Alex", "123456", "alex.anastasyev@mail.ru", mockAddress);
-        List<Person> mockPersonList = new ArrayList<>();
-        mockPersonList.add(mockPerson);
-        return mockPersonList;
+        List<PersonEntity> personEntities = personRepository.getAll();
+        List<Person> persons = new ArrayList<>();
+        for (PersonEntity personEntity : personEntities) {
+            persons.add(personConverter.convertEntityToPerson(personEntity));
+        }
+        return persons;
     }
 
-    @GetMapping("")
+    @GetMapping("/find")
     @ResponseBody
     public Person showPersonById(
-        @RequestParam(name = "id", required = true) String id
+        @RequestParam(name = "id") String id
     ) {
-        Address mockAddress = new Address("2", "Velikanova", "Ryazan",
-                "Ryazan State", "390044", "Russia");
-        Person mockPerson = new Person(id, "Alex", "123456", "alex.anastasyev@mail.ru", mockAddress);
-        return mockPerson;
+        PersonEntity personEntity = personRepository.getById(id);
+        return personConverter.convertEntityToPerson(personEntity);
     }
 
     @GetMapping("/delete")
     @ResponseBody
     public String deletePersonById(
-        @RequestParam(name = "id", required = true) String id
+        @RequestParam(name = "id") String id
     ) {
+        personRepository.deleteById(id);
         return "success";
     }
 
     @GetMapping("/update")
     @ResponseBody
     public String updatePersonById(
-        @RequestParam(name = "id", required = true) String id,
+        @RequestParam(name = "id") String id,
         @RequestParam(name = "name", required = false) String newName,
         @RequestParam(name = "phone", required = false) String newPhone,
         @RequestParam(name = "email", required = false) String newEmail,
-        @RequestParam(name = "address", required = false) String newAddress
+        @RequestParam(name = "addressId", required = false) String newAddressId
     ) {
+        PersonEntity personEntity = personRepository.getById(id);
+        if (newName == null) {
+            newName = personEntity.getName();
+        }
+        if (newPhone == null) {
+            newPhone = personEntity.getPhone();
+        }
+        if(newEmail == null) {
+            newEmail = personEntity.getEmail();
+        }
+        if (newAddressId == null) {
+            newAddressId = personEntity.getAddressId();
+        }
+        personRepository.updateById(id, newName, newPhone, newEmail, newAddressId);
         return "success";
     }
 }
