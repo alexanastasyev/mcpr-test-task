@@ -1,11 +1,9 @@
 package org.example.mcprwebapp.address;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,22 +19,22 @@ public class AddressController {
     @GetMapping("/all")
     @ResponseBody
     public List<Address> showAllAddresses() {
-        List<Address> addresses = addressRepository.getAll();
-        return addresses;
+        return addressRepository.getAll();
     }
 
-    @GetMapping("")
+    @GetMapping("/find")
     @ResponseBody
     public Address showAddressById(
-            @RequestParam(name = "id", required = true) String id
+            @RequestParam(name = "id") String id
     ) {
         return addressRepository.getById(id);
     }
 
     @GetMapping("/delete")
+    @ExceptionHandler(ConstraintViolationException.class)
     @ResponseBody
     public String deleteAddressById(
-            @RequestParam(name = "id", required = true) String id
+            @RequestParam(name = "id") String id
     ) {
         addressRepository.deleteById(id);
         return "success";
@@ -45,7 +43,7 @@ public class AddressController {
     @GetMapping("/update")
     @ResponseBody
     public String updateAddressById(
-            @RequestParam(name = "id", required = true) String id,
+            @RequestParam(name = "id") String id,
             @RequestParam(name = "street", required = false) String newStreet,
             @RequestParam(name = "city", required = false) String newCity,
             @RequestParam(name = "state", required = false) String newState,
