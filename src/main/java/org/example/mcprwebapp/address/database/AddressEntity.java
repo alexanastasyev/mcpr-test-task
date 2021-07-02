@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 @Entity(name = "address")
+@SuppressWarnings("unused")
 public class AddressEntity {
     @Id
     private String id;

@@ -13,7 +13,10 @@ public class PersonConverter {
     private final AddressRepository addressRepository;
     private final AddressConverter addressConverter;
 
-    public PersonConverter(@Autowired AddressRepository addressRepository, @Autowired AddressConverter addressConverter) {
+    public PersonConverter(
+        @Autowired AddressRepository addressRepository,
+        @Autowired AddressConverter addressConverter
+    ) {
         this.addressRepository = addressRepository;
         this.addressConverter = addressConverter;
     }

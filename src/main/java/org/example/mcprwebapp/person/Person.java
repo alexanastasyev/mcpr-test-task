@@ -2,6 +2,7 @@ package org.example.mcprwebapp.person;
 
 import org.example.mcprwebapp.address.Address;
 
+@SuppressWarnings("unused")
 public class Person {
     private String id;
     private String name;

@@ -17,7 +17,10 @@ public class AddressController {
     private final AddressRepository addressRepository;
     private final AddressConverter addressConverter;
 
-    public AddressController(@Autowired AddressRepository addressRepository, @Autowired AddressConverter addressConverter) {
+    public AddressController(
+        @Autowired AddressRepository addressRepository,
+        @Autowired AddressConverter addressConverter
+    ) {
         this.addressRepository = addressRepository;
         this.addressConverter = addressConverter;
     }
@@ -35,18 +38,14 @@ public class AddressController {
 
     @GetMapping("/find")
     @ResponseBody
-    public Address showAddressById(
-            @RequestParam(name = "id") String id
-    ) {
+    public Address showAddressById(@RequestParam(name = "id") String id) {
         AddressEntity addressEntity = addressRepository.getById(id);
         return addressConverter.convertEntityToAddress(addressEntity);
     }
 
     @GetMapping("/delete")
     @ResponseBody
-    public String deleteAddressById(
-            @RequestParam(name = "id") String id
-    ) {
+    public String deleteAddressById(@RequestParam(name = "id") String id) {
         addressRepository.deleteById(id);
         return "success";
     }
@@ -54,12 +53,12 @@ public class AddressController {
     @GetMapping("/update")
     @ResponseBody
     public String updateAddressById(
-            @RequestParam(name = "id") String id,
-            @RequestParam(name = "street", required = false) String newStreet,
-            @RequestParam(name = "city", required = false) String newCity,
-            @RequestParam(name = "state", required = false) String newState,
-            @RequestParam(name = "postal_code", required = false) String newPostalCode,
-            @RequestParam(name = "country", required = false) String newCountry
+        @RequestParam(name = "id") String id,
+        @RequestParam(name = "street", required = false) String newStreet,
+        @RequestParam(name = "city", required = false) String newCity,
+        @RequestParam(name = "state", required = false) String newState,
+        @RequestParam(name = "postal_code", required = false) String newPostalCode,
+        @RequestParam(name = "country", required = false) String newCountry
     ) {
         AddressEntity addressEntity = addressRepository.getById(id);
         if (newStreet == null) {

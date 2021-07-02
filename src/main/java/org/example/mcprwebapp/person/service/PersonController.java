@@ -20,7 +20,10 @@ public class PersonController {
     private final PersonRepository personRepository;
     private final PersonConverter personConverter;
 
-    public PersonController(@Autowired PersonRepository personRepository, @Autowired PersonConverter personConverter) {
+    public PersonController(
+        @Autowired PersonRepository personRepository,
+        @Autowired PersonConverter personConverter
+    ) {
         this.personRepository = personRepository;
         this.personConverter = personConverter;
     }
@@ -38,18 +41,14 @@ public class PersonController {
 
     @GetMapping("/find")
     @ResponseBody
-    public Person showPersonById(
-        @RequestParam(name = "id") String id
-    ) {
+    public Person showPersonById(@RequestParam(name = "id") String id) {
         PersonEntity personEntity = personRepository.getById(id);
         return personConverter.convertEntityToPerson(personEntity);
     }
 
     @GetMapping("/delete")
     @ResponseBody
-    public String deletePersonById(
-        @RequestParam(name = "id") String id
-    ) {
+    public String deletePersonById(@RequestParam(name = "id") String id) {
         personRepository.deleteById(id);
         return "success";
     }
@@ -70,7 +69,7 @@ public class PersonController {
         if (newPhone == null) {
             newPhone = personEntity.getPhone();
         }
-        if(newEmail == null) {
+        if (newEmail == null) {
             newEmail = personEntity.getEmail();
         }
         if (newAddressId == null) {

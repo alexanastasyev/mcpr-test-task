@@ -1,5 +1,6 @@
 package org.example.mcprwebapp.address;
 
+@SuppressWarnings("unused")
 public class Address {
     private String id;
     private String street;
