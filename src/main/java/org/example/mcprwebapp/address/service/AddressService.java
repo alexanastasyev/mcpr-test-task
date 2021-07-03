@@ -9,8 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequestMapping(ServiceUtils.ADDRESS_SERVICE_PATH)
@@ -28,46 +27,63 @@ public class AddressService {
 
     @GetMapping(ServiceUtils.GET_ALL_PATH)
     @ResponseBody
-    public List<Address> getAllAddresses() {
+    public Map<String, Object> getAllAddresses() {
         List<AddressEntity> addressEntities = addressRepository.getAll();
         List<Address> addresses = new ArrayList<>();
         for (AddressEntity addressEntity : addressEntities) {
             addresses.add(addressConverter.convertEntityToAddress(addressEntity));
         }
-        return addresses;
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put(ServiceUtils.ANSWER_STATUS, ServiceUtils.STATUS_SUCCESS);
+        result.put(ServiceUtils.ANSWER_RESULT, addresses);
+        return result;
     }
 
     @GetMapping(ServiceUtils.GET_BY_ID_PATH)
     @ResponseBody
-    public Address getAddressById(@RequestParam(name = "id") String id) {
+    public Map<String, Object> getAddressById(@RequestParam(name = "id") String id) {
+        Map<String, Object> result = new LinkedHashMap<>();
         AddressEntity addressEntity = addressRepository.getById(id);
         if (addressEntity != null) {
-            return addressConverter.convertEntityToAddress(addressEntity);
+            Address address = addressConverter.convertEntityToAddress(addressEntity);
+            result.put(ServiceUtils.ANSWER_STATUS, ServiceUtils.STATUS_SUCCESS);
+            result.put(ServiceUtils.ANSWER_RESULT, address);
+            return result;
         } else {
-            return Address.NULL_ADDRESS;
+            return ServiceUtils.ERROR_EMPTY_ANSWER;
         }
     }
 
     @DeleteMapping(ServiceUtils.DELETE_BY_ID_PATH)
     @ResponseBody
-    public String deleteAddressById(@RequestParam(name = "id") String id) {
-        addressRepository.deleteById(id);
-        return "success";
+    public Map<String, Object> deleteAddressById(@RequestParam(name = "id") String id) {
+        Map<String, Object> result = new LinkedHashMap<>();
+        AddressEntity addressEntity = addressRepository.getById(id);
+        if (addressEntity == null) {
+            result.put(ServiceUtils.ANSWER_STATUS, ServiceUtils.STATUS_ERROR);
+            result.put(ServiceUtils.ANSWER_RESULT, ServiceUtils.EMPTY_RESULT);
+        } else {
+            addressRepository.deleteById(id);
+            result.put(ServiceUtils.ANSWER_STATUS, ServiceUtils.STATUS_SUCCESS);
+            result.put(ServiceUtils.ANSWER_RESULT, addressConverter.convertEntityToAddress(addressEntity));
+        }
+        return result;
     }
 
     @PutMapping(ServiceUtils.UPDATE_BY_ID_PATH)
     @ResponseBody
-    public String updateAddressById(
+    public Map<String, Object> updateAddressById(
         @RequestParam(name = "id") String id,
         @RequestParam(name = "street", required = false) String newStreet,
         @RequestParam(name = "city", required = false) String newCity,
         @RequestParam(name = "state", required = false) String newState,
-        @RequestParam(name = "postal_code", required = false) String newPostalCode,
+        @RequestParam(name = "postalCode", required = false) String newPostalCode,
         @RequestParam(name = "country", required = false) String newCountry
     ) {
+        Map<String, Object> result = new LinkedHashMap<>();
         AddressEntity addressEntity = addressRepository.getById(id);
         if (addressEntity == null) {
-            return "Error: address with id \"" + id + "\" doesn't exist";
+            return ServiceUtils.ERROR_EMPTY_ANSWER;
         }
         if (newStreet == null) {
             newStreet = addressEntity.getStreet();
@@ -85,6 +101,9 @@ public class AddressService {
             newCountry = addressEntity.getCountry();
         }
         addressRepository.updateById(id, newStreet, newCity, newState, newPostalCode, newCountry);
-        return "success";
+        AddressEntity newAddressEntity = addressRepository.getById(id);
+        result.put(ServiceUtils.ANSWER_STATUS, ServiceUtils.STATUS_SUCCESS);
+        result.put(ServiceUtils.ANSWER_RESULT, addressConverter.convertEntityToAddress(newAddressEntity));
+        return result;
     }
 }

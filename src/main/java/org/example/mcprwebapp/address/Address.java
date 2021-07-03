@@ -2,8 +2,6 @@ package org.example.mcprwebapp.address;
 
 @SuppressWarnings("unused")
 public class Address {
-    public static final Address NULL_ADDRESS = new Address("", "", "", "", "", "");
-
     private String id;
     private String street;
     private String city;

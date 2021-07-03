@@ -44,7 +44,7 @@ public class PersonService {
         if (personEntity != null) {
             return personConverter.convertEntityToPerson(personEntity);
         } else {
-            return Person.NULL_PERSON;
+            return null;
         }
     }
 
