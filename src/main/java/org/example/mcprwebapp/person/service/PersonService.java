@@ -44,7 +44,7 @@ public class PersonService {
 
     @GetMapping(ServiceUtils.GET_BY_ID_PATH)
     @ResponseBody
-    public Map<String, Object> getPersonById(@RequestParam(name = "id") String id) {
+    public Map<String, Object> getPersonById(@RequestParam(name = ServiceUtils.PERSON_PARAM_ID) String id) {
         PersonEntity personEntity = personRepository.getById(id);
         if (personEntity != null) {
             Map<String, Object> result = new LinkedHashMap<>();
@@ -58,7 +58,7 @@ public class PersonService {
 
     @DeleteMapping(ServiceUtils.DELETE_BY_ID_PATH)
     @ResponseBody
-    public Map<String, Object> deletePersonById(@RequestParam(name = "id") String id) {
+    public Map<String, Object> deletePersonById(@RequestParam(name = ServiceUtils.PERSON_PARAM_ID) String id) {
         PersonEntity personEntity = personRepository.getById(id);
         if (personEntity == null) {
             return ServiceUtils.ERROR_EMPTY_ANSWER;
@@ -74,11 +74,11 @@ public class PersonService {
     @PutMapping(ServiceUtils.UPDATE_BY_ID_PATH)
     @ResponseBody
     public Map<String, Object> updatePersonById(
-        @RequestParam(name = "id") String id,
-        @RequestParam(name = "name", required = false) String newName,
-        @RequestParam(name = "phone", required = false) String newPhone,
-        @RequestParam(name = "email", required = false) String newEmail,
-        @RequestParam(name = "addressId", required = false) String newAddressId
+        @RequestParam(name = ServiceUtils.PERSON_PARAM_ID) String id,
+        @RequestParam(name = ServiceUtils.PERSON_PARAM_NAME, required = false) String newName,
+        @RequestParam(name = ServiceUtils.PERSON_PARAM_PHONE, required = false) String newPhone,
+        @RequestParam(name = ServiceUtils.PERSON_PARAM_EMAIL, required = false) String newEmail,
+        @RequestParam(name = ServiceUtils.PERSON_PARAM_ADDRESS_ID, required = false) String newAddressId
     ) {
         PersonEntity personEntity = personRepository.getById(id);
         if (personEntity == null) {
@@ -100,7 +100,7 @@ public class PersonService {
         PersonEntity newPersonEntity = personRepository.getById(id);
         Map<String, Object> result = new LinkedHashMap<>();
         result.put(ServiceUtils.ANSWER_STATUS, ServiceUtils.STATUS_SUCCESS);
-        result.put(ServiceUtils.ANSWER_RESULT, personConverter.convertEntityToPerson(personEntity));
+        result.put(ServiceUtils.ANSWER_RESULT, personConverter.convertEntityToPerson(newPersonEntity));
         return result;
     }
 }

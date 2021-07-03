@@ -41,7 +41,7 @@ public class AddressService {
 
     @GetMapping(ServiceUtils.GET_BY_ID_PATH)
     @ResponseBody
-    public Map<String, Object> getAddressById(@RequestParam(name = "id") String id) {
+    public Map<String, Object> getAddressById(@RequestParam(name = ServiceUtils.ADDRESS_PARAM_ID) String id) {
         AddressEntity addressEntity = addressRepository.getById(id);
         if (addressEntity != null) {
             Map<String, Object> result = new LinkedHashMap<>();
@@ -55,7 +55,7 @@ public class AddressService {
 
     @DeleteMapping(ServiceUtils.DELETE_BY_ID_PATH)
     @ResponseBody
-    public Map<String, Object> deleteAddressById(@RequestParam(name = "id") String id) {
+    public Map<String, Object> deleteAddressById(@RequestParam(name = ServiceUtils.ADDRESS_PARAM_ID) String id) {
         AddressEntity addressEntity = addressRepository.getById(id);
         if (addressEntity == null) {
             return ServiceUtils.ERROR_EMPTY_ANSWER;
@@ -71,12 +71,12 @@ public class AddressService {
     @PutMapping(ServiceUtils.UPDATE_BY_ID_PATH)
     @ResponseBody
     public Map<String, Object> updateAddressById(
-        @RequestParam(name = "id") String id,
-        @RequestParam(name = "street", required = false) String newStreet,
-        @RequestParam(name = "city", required = false) String newCity,
-        @RequestParam(name = "state", required = false) String newState,
-        @RequestParam(name = "postalCode", required = false) String newPostalCode,
-        @RequestParam(name = "country", required = false) String newCountry
+        @RequestParam(name = ServiceUtils.ADDRESS_PARAM_ID) String id,
+        @RequestParam(name = ServiceUtils.ADDRESS_PARAM_STREET, required = false) String newStreet,
+        @RequestParam(name = ServiceUtils.ADDRESS_PARAM_CITY, required = false) String newCity,
+        @RequestParam(name = ServiceUtils.ADDRESS_PARAM_STATE, required = false) String newState,
+        @RequestParam(name = ServiceUtils.ADDRESS_PARAM_POSTAL_CODE, required = false) String newPostalCode,
+        @RequestParam(name = ServiceUtils.ADDRESS_PARAM_COUNTRY, required = false) String newCountry
     ) {
         AddressEntity addressEntity = addressRepository.getById(id);
         if (addressEntity == null) {
