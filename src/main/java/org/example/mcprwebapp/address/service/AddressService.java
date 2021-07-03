@@ -61,10 +61,7 @@ public class AddressService {
             return ServiceUtils.ERROR_EMPTY_ANSWER;
         } else {
             addressRepository.deleteById(id);
-            Map<String, Object> result = new LinkedHashMap<>();
-            result.put(ServiceUtils.ANSWER_STATUS, ServiceUtils.STATUS_SUCCESS);
-            result.put(ServiceUtils.ANSWER_RESULT, addressConverter.convertEntityToAddress(addressEntity));
-            return result;
+            return ServiceUtils.SUCCESS_EMPTY_ANSWER;
         }
     }
 

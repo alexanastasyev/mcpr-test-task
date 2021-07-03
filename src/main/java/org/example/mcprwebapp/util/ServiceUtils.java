@@ -30,10 +30,12 @@ public class ServiceUtils {
     public static final String ANSWER_RESULT = "result";
     public static final String STATUS_SUCCESS = "success";
     public static final String STATUS_ERROR = "error";
-    public static final String EMPTY_RESULT = "";
 
     public static final Map<String, Object> ERROR_EMPTY_ANSWER = new LinkedHashMap<String, Object>() {{
         put(ANSWER_STATUS, STATUS_ERROR);
-        put(ANSWER_RESULT, EMPTY_RESULT);
+    }};
+
+    public static final Map<String, Object> SUCCESS_EMPTY_ANSWER = new LinkedHashMap<String, Object>() {{
+        put(ANSWER_STATUS, STATUS_SUCCESS);
     }};
 }
