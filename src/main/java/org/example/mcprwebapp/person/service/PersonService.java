@@ -4,23 +4,21 @@ import org.example.mcprwebapp.person.Person;
 import org.example.mcprwebapp.person.database.PersonConverter;
 import org.example.mcprwebapp.person.database.PersonEntity;
 import org.example.mcprwebapp.person.database.PersonRepository;
+import org.example.mcprwebapp.util.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@RequestMapping("rest/person")
-public class PersonController {
+@RequestMapping(ServiceUtils.PERSON_SERVICE_PATH)
+public class PersonService {
     private final PersonRepository personRepository;
     private final PersonConverter personConverter;
 
-    public PersonController(
+    public PersonService(
         @Autowired PersonRepository personRepository,
         @Autowired PersonConverter personConverter
     ) {
@@ -28,9 +26,9 @@ public class PersonController {
         this.personConverter = personConverter;
     }
 
-    @GetMapping("/all")
+    @GetMapping(ServiceUtils.GET_ALL_PATH)
     @ResponseBody
-    public List<Person> showAllPersons() {
+    public List<Person> getAllPersons() {
         List<PersonEntity> personEntities = personRepository.getAll();
         List<Person> persons = new ArrayList<>();
         for (PersonEntity personEntity : personEntities) {
@@ -39,9 +37,9 @@ public class PersonController {
         return persons;
     }
 
-    @GetMapping("/find")
+    @GetMapping(ServiceUtils.GET_BY_ID_PATH)
     @ResponseBody
-    public Person showPersonById(@RequestParam(name = "id") String id) {
+    public Person getPersonById(@RequestParam(name = "id") String id) {
         PersonEntity personEntity = personRepository.getById(id);
         if (personEntity != null) {
             return personConverter.convertEntityToPerson(personEntity);
@@ -50,14 +48,14 @@ public class PersonController {
         }
     }
 
-    @GetMapping("/delete")
+    @DeleteMapping(ServiceUtils.DELETE_BY_ID_PATH)
     @ResponseBody
     public String deletePersonById(@RequestParam(name = "id") String id) {
         personRepository.deleteById(id);
         return "success";
     }
 
-    @GetMapping("/update")
+    @PutMapping(ServiceUtils.UPDATE_BY_ID_PATH)
     @ResponseBody
     public String updatePersonById(
         @RequestParam(name = "id") String id,

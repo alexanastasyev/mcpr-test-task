@@ -4,21 +4,21 @@ import org.example.mcprwebapp.address.Address;
 import org.example.mcprwebapp.address.database.AddressConverter;
 import org.example.mcprwebapp.address.database.AddressEntity;
 import org.example.mcprwebapp.address.database.AddressRepository;
+import org.example.mcprwebapp.util.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
-import javax.websocket.OnError;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@RequestMapping("rest/address")
-public class AddressController {
+@RequestMapping(ServiceUtils.ADDRESS_SERVICE_PATH)
+public class AddressService {
     private final AddressRepository addressRepository;
     private final AddressConverter addressConverter;
 
-    public AddressController(
+    public AddressService(
         @Autowired AddressRepository addressRepository,
         @Autowired AddressConverter addressConverter
     ) {
@@ -26,9 +26,9 @@ public class AddressController {
         this.addressConverter = addressConverter;
     }
 
-    @GetMapping("/all")
+    @GetMapping(ServiceUtils.GET_ALL_PATH)
     @ResponseBody
-    public List<Address> showAllAddresses() {
+    public List<Address> getAllAddresses() {
         List<AddressEntity> addressEntities = addressRepository.getAll();
         List<Address> addresses = new ArrayList<>();
         for (AddressEntity addressEntity : addressEntities) {
@@ -37,9 +37,9 @@ public class AddressController {
         return addresses;
     }
 
-    @GetMapping("/find")
+    @GetMapping(ServiceUtils.GET_BY_ID_PATH)
     @ResponseBody
-    public Address showAddressById(@RequestParam(name = "id") String id) {
+    public Address getAddressById(@RequestParam(name = "id") String id) {
         AddressEntity addressEntity = addressRepository.getById(id);
         if (addressEntity != null) {
             return addressConverter.convertEntityToAddress(addressEntity);
@@ -48,14 +48,14 @@ public class AddressController {
         }
     }
 
-    @GetMapping("/delete")
+    @DeleteMapping(ServiceUtils.DELETE_BY_ID_PATH)
     @ResponseBody
     public String deleteAddressById(@RequestParam(name = "id") String id) {
         addressRepository.deleteById(id);
         return "success";
     }
 
-    @GetMapping("/update")
+    @PutMapping(ServiceUtils.UPDATE_BY_ID_PATH)
     @ResponseBody
     public String updateAddressById(
         @RequestParam(name = "id") String id,

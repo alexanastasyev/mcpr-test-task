@@ -9,6 +9,6 @@ public class ErrorController implements org.springframework.boot.web.servlet.err
     @RequestMapping("/error")
     @ResponseBody
     public String showErrorMessage() {
-        return "error!";
+        return "error";
     }
 }
