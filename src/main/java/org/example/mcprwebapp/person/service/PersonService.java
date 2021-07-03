@@ -44,7 +44,7 @@ public class PersonService {
 
     @GetMapping(ServiceUtils.GET_BY_ID_PATH)
     @ResponseBody
-    public Map<String, Object> getPersonById(@RequestParam(name = ServiceUtils.PERSON_PARAM_ID) String id) {
+    public Map<String, Object> getPersonById(@RequestParam(name = ServiceUtils.PARAM_ID) String id) {
         PersonEntity personEntity = personRepository.getById(id);
         if (personEntity != null) {
             Map<String, Object> result = new LinkedHashMap<>();
@@ -58,7 +58,7 @@ public class PersonService {
 
     @DeleteMapping(ServiceUtils.DELETE_BY_ID_PATH)
     @ResponseBody
-    public Map<String, Object> deletePersonById(@RequestParam(name = ServiceUtils.PERSON_PARAM_ID) String id) {
+    public Map<String, Object> deletePersonById(@PathVariable(name = ServiceUtils.PARAM_ID) String id) {
         PersonEntity personEntity = personRepository.getById(id);
         if (personEntity == null) {
             return ServiceUtils.ERROR_EMPTY_ANSWER;
@@ -74,7 +74,7 @@ public class PersonService {
     @PutMapping(ServiceUtils.UPDATE_BY_ID_PATH)
     @ResponseBody
     public Map<String, Object> updatePersonById(
-        @RequestParam(name = ServiceUtils.PERSON_PARAM_ID) String id,
+        @PathVariable(name = ServiceUtils.PARAM_ID) String id,
         @RequestParam(name = ServiceUtils.PERSON_PARAM_NAME, required = false) String newName,
         @RequestParam(name = ServiceUtils.PERSON_PARAM_PHONE, required = false) String newPhone,
         @RequestParam(name = ServiceUtils.PERSON_PARAM_EMAIL, required = false) String newEmail,
