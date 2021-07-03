@@ -42,12 +42,11 @@ public class AddressService {
     @GetMapping(ServiceUtils.GET_BY_ID_PATH)
     @ResponseBody
     public Map<String, Object> getAddressById(@RequestParam(name = "id") String id) {
-        Map<String, Object> result = new LinkedHashMap<>();
         AddressEntity addressEntity = addressRepository.getById(id);
         if (addressEntity != null) {
-            Address address = addressConverter.convertEntityToAddress(addressEntity);
+            Map<String, Object> result = new LinkedHashMap<>();
             result.put(ServiceUtils.ANSWER_STATUS, ServiceUtils.STATUS_SUCCESS);
-            result.put(ServiceUtils.ANSWER_RESULT, address);
+            result.put(ServiceUtils.ANSWER_RESULT, addressConverter.convertEntityToAddress(addressEntity));
             return result;
         } else {
             return ServiceUtils.ERROR_EMPTY_ANSWER;
@@ -57,17 +56,16 @@ public class AddressService {
     @DeleteMapping(ServiceUtils.DELETE_BY_ID_PATH)
     @ResponseBody
     public Map<String, Object> deleteAddressById(@RequestParam(name = "id") String id) {
-        Map<String, Object> result = new LinkedHashMap<>();
         AddressEntity addressEntity = addressRepository.getById(id);
         if (addressEntity == null) {
-            result.put(ServiceUtils.ANSWER_STATUS, ServiceUtils.STATUS_ERROR);
-            result.put(ServiceUtils.ANSWER_RESULT, ServiceUtils.EMPTY_RESULT);
+            return ServiceUtils.ERROR_EMPTY_ANSWER;
         } else {
             addressRepository.deleteById(id);
+            Map<String, Object> result = new LinkedHashMap<>();
             result.put(ServiceUtils.ANSWER_STATUS, ServiceUtils.STATUS_SUCCESS);
             result.put(ServiceUtils.ANSWER_RESULT, addressConverter.convertEntityToAddress(addressEntity));
+            return result;
         }
-        return result;
     }
 
     @PutMapping(ServiceUtils.UPDATE_BY_ID_PATH)
@@ -80,7 +78,6 @@ public class AddressService {
         @RequestParam(name = "postalCode", required = false) String newPostalCode,
         @RequestParam(name = "country", required = false) String newCountry
     ) {
-        Map<String, Object> result = new LinkedHashMap<>();
         AddressEntity addressEntity = addressRepository.getById(id);
         if (addressEntity == null) {
             return ServiceUtils.ERROR_EMPTY_ANSWER;
@@ -102,6 +99,7 @@ public class AddressService {
         }
         addressRepository.updateById(id, newStreet, newCity, newState, newPostalCode, newCountry);
         AddressEntity newAddressEntity = addressRepository.getById(id);
+        Map<String, Object> result = new LinkedHashMap<>();
         result.put(ServiceUtils.ANSWER_STATUS, ServiceUtils.STATUS_SUCCESS);
         result.put(ServiceUtils.ANSWER_RESULT, addressConverter.convertEntityToAddress(newAddressEntity));
         return result;

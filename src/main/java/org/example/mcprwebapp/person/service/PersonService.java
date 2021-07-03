@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequestMapping(ServiceUtils.PERSON_SERVICE_PATH)
@@ -28,36 +30,50 @@ public class PersonService {
 
     @GetMapping(ServiceUtils.GET_ALL_PATH)
     @ResponseBody
-    public List<Person> getAllPersons() {
+    public Map<String, Object> getAllPersons() {
         List<PersonEntity> personEntities = personRepository.getAll();
         List<Person> persons = new ArrayList<>();
         for (PersonEntity personEntity : personEntities) {
             persons.add(personConverter.convertEntityToPerson(personEntity));
         }
-        return persons;
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put(ServiceUtils.ANSWER_STATUS, ServiceUtils.STATUS_SUCCESS);
+        result.put(ServiceUtils.ANSWER_RESULT, persons);
+        return result;
     }
 
     @GetMapping(ServiceUtils.GET_BY_ID_PATH)
     @ResponseBody
-    public Person getPersonById(@RequestParam(name = "id") String id) {
+    public Map<String, Object> getPersonById(@RequestParam(name = "id") String id) {
         PersonEntity personEntity = personRepository.getById(id);
         if (personEntity != null) {
-            return personConverter.convertEntityToPerson(personEntity);
+            Map<String, Object> result = new LinkedHashMap<>();
+            result.put(ServiceUtils.ANSWER_STATUS, ServiceUtils.STATUS_SUCCESS);
+            result.put(ServiceUtils.ANSWER_RESULT, personConverter.convertEntityToPerson(personEntity));
+            return result;
         } else {
-            return null;
+            return ServiceUtils.ERROR_EMPTY_ANSWER;
         }
     }
 
     @DeleteMapping(ServiceUtils.DELETE_BY_ID_PATH)
     @ResponseBody
-    public String deletePersonById(@RequestParam(name = "id") String id) {
-        personRepository.deleteById(id);
-        return "success";
+    public Map<String, Object> deletePersonById(@RequestParam(name = "id") String id) {
+        PersonEntity personEntity = personRepository.getById(id);
+        if (personEntity == null) {
+            return ServiceUtils.ERROR_EMPTY_ANSWER;
+        } else {
+            personRepository.deleteById(id);
+            Map<String, Object> result = new LinkedHashMap<>();
+            result.put(ServiceUtils.ANSWER_STATUS, ServiceUtils.STATUS_SUCCESS);
+            result.put(ServiceUtils.ANSWER_RESULT, personConverter.convertEntityToPerson(personEntity));
+            return result;
+        }
     }
 
     @PutMapping(ServiceUtils.UPDATE_BY_ID_PATH)
     @ResponseBody
-    public String updatePersonById(
+    public Map<String, Object> updatePersonById(
         @RequestParam(name = "id") String id,
         @RequestParam(name = "name", required = false) String newName,
         @RequestParam(name = "phone", required = false) String newPhone,
@@ -66,7 +82,7 @@ public class PersonService {
     ) {
         PersonEntity personEntity = personRepository.getById(id);
         if (personEntity == null) {
-            return "Error: person with id \"" + id + "\" doesn't exist";
+            return ServiceUtils.ERROR_EMPTY_ANSWER;
         }
         if (newName == null) {
             newName = personEntity.getName();
@@ -81,6 +97,10 @@ public class PersonService {
             newAddressId = personEntity.getAddressId();
         }
         personRepository.updateById(id, newName, newPhone, newEmail, newAddressId);
-        return "success";
+        PersonEntity newPersonEntity = personRepository.getById(id);
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put(ServiceUtils.ANSWER_STATUS, ServiceUtils.STATUS_SUCCESS);
+        result.put(ServiceUtils.ANSWER_RESULT, personConverter.convertEntityToPerson(personEntity));
+        return result;
     }
 }
